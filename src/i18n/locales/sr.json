@@ -1,0 +1,62 @@
+{
+  "by_name": "Po imenu",
+  "by_dish": "Po jelu",
+  "no_data": "🗿 Nema podataka",
+  "menu_from": "Meni od {date}",
+  "outdated": "Zastarelo",
+  "menu_is_updating": "Meni se ažurira",
+  "system": {
+    "cancel": "Otkaži",
+    "insert": "Umetni",
+    "reset": "Resetuj",
+    "reload": "Ponovo učitaj",
+    "error": "Greška"
+  },
+  "days": {
+    "mon": "Pon",
+    "tue": "Uto",
+    "wed": "Sre",
+    "thu": "Čet",
+    "fri": "Pet",
+    "sat": "Sub"
+  },
+  "update_menu_modal": {
+    "title": "Ažuriraj meni",
+    "input_label": "Unesite link do aktuelne tabele",
+    "input_placeholder": "URL",
+    "info_message": "Automatsko učitavanje aktuelne tabele je onemogućeno. Admin tabele se više ne koriste. Mogu se obrisati."
+  },
+  "share_food_modal": {
+    "title": "Podeli obrok",
+    "how_to_save_title": "Kako sačuvati?",
+    "how_to_save_step_1": "Pritisnite i zadržite ovu sliku.",
+    "how_to_save_step_2": "U meniju koji se pojavi izaberite: sačuvaj sliku ili kopiraj sliku."
+  },
+  "food_alert_banner": {
+    "title": "Hoćeš li ostati gladan sledeće nedelje?",
+    "subtitle": "p.s. Popuni tabelu :)",
+    "remind_later": "Podsetite me kasnije"
+  },
+  "dish_type": {
+    "breakfast": "Doručak",
+    "juice": "Sok",
+    "soup": "Supa",
+    "salad": "Salata",
+    "main_dish": "Glavno jelo",
+    "side_dish": "Prilog",
+    "dessert": "Desert"
+  },
+  "promotions": {
+    "segment_title": "Promocije",
+    "copy_error_1": "Došlo je do greške prilikom kopiranja promo koda",
+    "copy_error_2": "Nije uspelo kopiranje promo koda",
+    "copy_success": "Promo kod je uspešno kopiran"
+  },
+  "promotions_data": {
+    "uziwa": {
+      "title": "Uziwa",
+      "subtitle": "15% popusta na svaku narudžbinu",
+      "description": "Prirodna vina srpske vinarije Uziwa — 15% popusta na svaku narudžbinu"
+    }
+  }
+}

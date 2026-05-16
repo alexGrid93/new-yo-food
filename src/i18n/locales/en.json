@@ -1,0 +1,62 @@
+{
+  "by_name": "By name",
+  "by_dish": "By dish",
+  "no_data": "\uD83D\uDDFF No data",
+  "menu_from": "Menu from {date}",
+  "outdated": "Outdated",
+  "menu_is_updating": "Menu is updating",
+  "system": {
+    "cancel": "Cancel",
+    "insert": "Insert",
+    "reset": "Reset",
+    "reload": "Reload",
+    "error": "Error"
+  },
+  "days": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "update_menu_modal": {
+    "title": "Update menu",
+    "input_label": "Enter a link to the current spreadsheet",
+    "input_placeholder": "URL",
+    "info_message": "Auto-loading of the current spreadsheet is disabled. Admin spreadsheets are no longer used. They can be deleted."
+  },
+  "share_food_modal": {
+    "title": "Share a meal",
+    "how_to_save_title": "How to save?",
+    "how_to_save_step_1": "Press and hold this image.",
+    "how_to_save_step_2": "In the menu that appears, choose: save image or copy image."
+  },
+  "food_alert_banner": {
+    "title": "Don't want to go hungry next week?",
+    "subtitle": "p.s. Fill in the spreadsheet :)",
+    "remind_later": "Remind me later"
+  },
+  "dish_type": {
+    "breakfast": "Breakfast",
+    "juice": "Juice",
+    "soup":  "Soup",
+    "salad": "Salad",
+    "main_dish":  "Main dish",
+    "side_dish": "Side dish",
+    "dessert":  "Dessert"
+  },
+  "promotions": {
+    "segment_title": "Promo",
+    "copy_error_1": "An error occurred while copying the promo code",
+    "copy_error_2": "Failed to copy the promo code",
+    "copy_success": "Promo code copied successfully"
+  },
+  "promotions_data": {
+    "uziwa": {
+      "title": "Uziwa",
+      "subtitle": "15% off every order",
+      "description": "Natural wines from Serbian winery Uziwa — 15% off every order"
+    }
+  }
+}
