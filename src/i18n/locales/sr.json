@@ -28,6 +28,16 @@
   },
   "share_food_modal": {
     "title": "Podeli obrok",
+    "quote": "Delim hranu sa tobom",
+    "quote_author": "Konfučije",
+    "pre_title": "Uklonite nepotrebna jela",
+    "pre_hint": "Odznačite jela koja ne delite — biće precrtana na slici.",
+    "pre_generate": "Napravi sliku",
+    "share": "Podeli",
+    "send": "Pošalji",
+    "download": "Preuzmi",
+    "copy": "Kopiraj",
+    "copied": "Kopirano",
     "how_to_save_title": "Kako sačuvati?",
     "how_to_save_step_1": "Pritisnite i zadržite ovu sliku.",
     "how_to_save_step_2": "U meniju koji se pojavi izaberite: sačuvaj sliku ili kopiraj sliku."

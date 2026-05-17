@@ -17,8 +17,8 @@
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
     "ant-design-vue": "^4.2.6",
-    "axios": "^1.8.4",
     "excel-date-to-js": "^1.1.5",
+    "modern-screenshot": "^4.7.0",
     "node-xlsx": "^0.24.0",
     "vue": "^3.5.13",
     "vue-i18n": "^11.4.0",

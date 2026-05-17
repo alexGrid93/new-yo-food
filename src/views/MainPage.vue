@@ -11,6 +11,7 @@ import type { MenuData } from '@/utils/types'
 import {
   Alert,
   Button,
+  Checkbox,
   Divider,
   Flex,
   Image,
@@ -24,10 +25,8 @@ import {
   Col,
   Badge,
 } from 'ant-design-vue'
-import { ShareAltOutlined, ShoppingCartOutlined } from '@ant-design/icons-vue'
-
-import reloadSvg from '@/assets/reload.svg'
-import reloadDisabledSvg from '@/assets/reload_disabled.svg'
+import ShareImageTemplate from '@/components/ShareImageTemplate.vue'
+import { ReloadOutlined, ShareAltOutlined, ShoppingCartOutlined } from '@ant-design/icons-vue'
 
 import { useUpdateMenu } from '@/utils/useUpdateMenu'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -46,6 +45,7 @@ import LangSwitch from '@/components/LangSwitch.vue'
 import PromoView from '@/components/promo/PromoView.vue'
 import { useI18n } from 'vue-i18n'
 import { usePromoMerketing } from '@/features/usePromoMerketing.ts'
+import { useShareAnnouncement } from '@/features/useShareAnnouncement.ts'
 
 const menuDataFromStorage = localStorage.getItem('menuData')
 const selectedEmployeeFromStorage = localStorage.getItem('selectedEmployee')
@@ -96,8 +96,6 @@ const isActualMenu = computed(() => {
   return timeDiff < 5 * millisecondsDay
 })
 
-const reloadButtonUrl = computed(() => (isActualMenu.value ? reloadDisabledSvg : reloadSvg))
-
 const updateDate = () => {
   currentDate.value = new Date()
 }
@@ -127,6 +125,8 @@ onUnmounted(() => {
 })
 
 const { isShowBadge, userVisitPromo } = usePromoMerketing()
+
+const { isShowShareBadge, markShareClicked } = useShareAnnouncement()
 
 const handleTogglehMode = (val: SegmentMode) => {
   segmentMode.value = val
@@ -159,7 +159,27 @@ const extractGoogleSheetId = (url: string): string | null => {
   return match ? match[1] : null
 }
 
-const { onClick, isOpenShareModal, imageResponse, resetImageResponse } = useShareImage()
+const {
+  onClick,
+  isOpenPreShareModal,
+  isOpenShareModal,
+  imageUrl: shareImageUrl,
+  imageBlob: shareImageBlob,
+  isCopied: isShareCopied,
+  canNativeShare,
+  canCopy: canCopyImage,
+  dateInfo: shareDateInfo,
+  userName: shareUserName,
+  menuItems: shareMenuItems,
+  templateRef: shareTemplateRef,
+  closePreShareModal,
+  toggleItem: toggleShareItem,
+  generateImage,
+  shareImage,
+  downloadImage,
+  copyImage,
+  resetImageResponse,
+} = useShareImage()
 
 const onUpdateDay = () => {
   resetImageResponse()
@@ -194,6 +214,14 @@ watch(isUpdateModalOpen, (isOpen) => {
 })
 
 watch(selectedDay, () => (selectedDish.value = undefined))
+
+watch([isOpenShareModal, isOpenPreShareModal], ([share, pre]) => {
+  document.body.style.overflow = share || pre ? 'hidden' : ''
+})
+
+onUnmounted(() => {
+  document.body.style.overflow = ''
+})
 
 const { clickHideControl, isShowHideControls } = useHideControls()
 const { isShow, onClose, remindMeLater } = useFoodAlert()
@@ -241,57 +269,67 @@ const isPromoModeActive = computed(() => segmentMode.value === SegmentMode.Promo
     @remindMeLater="remindMeLater"
     class="food-alert"
   />
-  <Flex class="menu" align="center" gap="small">
-    <Button
-      v-if="isShowHideControls"
-      @click="
-        $router.push({
-          query: {
-            mode: 'delivery',
-          },
-        })
-      "
-      size="large"
-    >
-      <template #icon>
-        <ShoppingCartOutlined />
-      </template>
-    </Button>
+  <Flex vertical gap="10">
+    <Flex align="center" justify="space-between" gap="small">
+      <CurrentDate @click="clickHideControl(HideControl.DATE)" :date="currentDate" />
 
-    <img
-      @click="
-        () => {
-          if (!isLoading) {
-            isUpdateModalOpen = true
-          }
-        }
-      "
-      :src="reloadButtonUrl"
-      :class="{ reloadButton: true, 'reloadButton--loading': isLoading }"
-    />
+      <Flex align="center" gap="small">
+        <Button
+          v-if="isShowHideControls"
+          @click="
+            $router.push({
+              query: {
+                mode: 'delivery',
+              },
+            })
+          "
+          size="large"
+        >
+          <template #icon>
+            <ShoppingCartOutlined />
+          </template>
+        </Button>
 
-    <Button
-      v-if="isEmployeeMode && selectedEmployee"
-      @click="
-        () =>
-          onClick({
-            dateInfo: selectedDay,
-            menu: employeeMenuByDay || [''],
-            userName: selectedEmployee || '',
-          })
-      "
-      size="large"
-    >
-      <template #icon>
-        <ShareAltOutlined />
-      </template>
-    </Button>
+        <Button
+          size="large"
+          :type="isActualMenu ? 'default' : 'primary'"
+          :loading="isLoading"
+          @click="isUpdateModalOpen = true"
+        >
+          <template #icon>
+            <ReloadOutlined />
+          </template>
+        </Button>
 
-    <LangSwitch />
-  </Flex>
+        <Badge
+          v-if="isEmployeeMode && selectedEmployee && employeeMenuByDay && employeeMenuByDay.length"
+          :dot="isShowShareBadge"
+          :offset="[-6, 6]"
+          :class="{ 'share-button--highlight': isShowShareBadge }"
+        >
+          <Button
+            @click="
+              () => {
+                markShareClicked()
+                onClick({
+                  dateInfo: selectedDay,
+                  menu: employeeMenuByDay || [''],
+                  userName: selectedEmployee || '',
+                })
+              }
+            "
+            size="large"
+          >
+            <template #icon>
+              <ShareAltOutlined />
+            </template>
+          </Button>
+        </Badge>
 
-  <Flex vertical gap="20">
-    <CurrentDate @click="clickHideControl(HideControl.DATE)" :date="currentDate" />
+        <LangSwitch />
+      </Flex>
+    </Flex>
+
     <TitleContainer
       @click-logo="clickHideControl(HideControl.LOGO)"
       @click-title="clickHideControl(HideControl.TITLE)"
@@ -379,70 +417,90 @@ const isPromoModeActive = computed(() => segmentMode.value === SegmentMode.Promo
   </Modal>
 
   <Modal
+    v-model:open="isOpenPreShareModal"
+    :getContainer="false"
+    :okText="$t('share_food_modal.pre_generate')"
+    :cancelText="$t('system.cancel')"
+    :ok-button-props="{ onClick: () => generateImage() }"
+    :cancel-button-props="{ onClick: () => closePreShareModal() }"
+    :body-style="{ maxHeight: '60vh', overflowY: 'auto' }"
+    centered
+  >
+    <template #title>{{ $t('share_food_modal.pre_title') }}</template>
+    <Text type="secondary">{{ $t('share_food_modal.pre_hint') }}</Text>
+    <Divider />
+    <Flex vertical gap="8">
+      <Checkbox
+        v-for="(item, i) in shareMenuItems"
+        :key="i"
+        :checked="item.selected"
+        @change="toggleShareItem(i)"
+      >
+        {{ item.text }}
+      </Checkbox>
+    </Flex>
+  </Modal>
+
+  <Modal
     v-model:open="isOpenShareModal"
     :getContainer="false"
     :footer="false"
+    :body-style="{ maxHeight: '95vh', overflowY: 'auto' }"
     destroyOnClose
     centered
+    @cancel="resetImageResponse"
   >
-    <template #title>{{ $t('share_food_modal.title') }}</template>
     <Flex align="center" justify="center" class="imageContainer">
-      <Spin v-if="!imageResponse" size="large" />
-      <Image
-        v-else
-        :src="imageResponse"
-        :preview="false"
-        :placeholder="true"
-        width="600"
-        height="600"
-      />
+      <Spin v-if="!shareImageUrl" size="large" />
+      <Image v-else :src="shareImageUrl" :preview="false" :placeholder="true" class="shareImage" />
     </Flex>
 
-    <TypographyTitle :level="5">{{ $t('share_food_modal.how_to_save_title') }}</TypographyTitle>
-    <Typography>1. {{ $t('share_food_modal.how_to_save_step_1') }}</Typography>
-    <Typography>2. {{ $t('share_food_modal.how_to_save_step_2') }}</Typography>
+    <Flex
+      v-if="shareImageBlob"
+      gap="10"
+      justify="center"
+      :style="{ marginTop: '16px' }"
+      wrap="wrap"
+    >
+      <Button v-if="canNativeShare" type="primary" size="large" @click="shareImage">
+        <template #icon>
+          <ShareAltOutlined />
+        </template>
+        {{ $t('share_food_modal.send') }}
+      </Button>
+      <template v-else>
+        <Button type="primary" size="large" @click="downloadImage">
+          {{ $t('share_food_modal.download') }}
+        </Button>
+        <Button v-if="canCopyImage" size="large" @click="copyImage">
+          {{ isShareCopied ? $t('share_food_modal.copied') : $t('share_food_modal.copy') }}
+        </Button>
+      </template>
+    </Flex>
+
+    <template v-if="shareImageBlob && !canNativeShare && !canCopyImage">
+      <TypographyTitle :level="5">{{ $t('share_food_modal.how_to_save_title') }}</TypographyTitle>
+      <Typography>1. {{ $t('share_food_modal.how_to_save_step_1') }}</Typography>
+      <Typography>2. {{ $t('share_food_modal.how_to_save_step_2') }}</Typography>
+    </template>
   </Modal>
+
+  <div ref="shareTemplateRef" class="share-template-offscreen" aria-hidden="true">
+    <ShareImageTemplate
+      :user-name="shareUserName"
+      :date-info="shareDateInfo"
+      :items="shareMenuItems"
+    />
+  </div>
 </template>
 
 <style>
 body {
   position: relative;
-  margin: 20px;
+  margin: 8px 20px 20px;
   padding: 10px;
   color: #231f20;
   max-width: 800px;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.menu {
-  position: absolute;
-  right: 20px;
-  top: -15px;
-}
-
-.reloadButton {
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  width: 60px;
-  height: 60px;
-  transition: transform 0.3s ease-in-out;
-}
-
-.reloadButton--loading {
-  animation: spin 1s linear infinite;
 }
 
 .spinner {
@@ -454,8 +512,24 @@ body {
 
 .imageContainer {
   width: 100%;
-  height: 100%;
-  aspect-ratio: 1/1;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.shareImage {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.share-template-offscreen {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  pointer-events: none;
 }
 
 .food-alert {
@@ -465,5 +539,37 @@ body {
   width: calc(100% + 40px);
   transform: translateX(-50%);
   z-index: 9999999;
+}
+
+@keyframes share-pulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(24, 144, 255, 0.65),
+      0 0 0 0 rgba(24, 144, 255, 0.45);
+  }
+  70% {
+    box-shadow:
+      0 0 0 14px rgba(24, 144, 255, 0),
+      0 0 0 22px rgba(24, 144, 255, 0);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(24, 144, 255, 0),
+      0 0 0 0 rgba(24, 144, 255, 0);
+  }
+}
+
+.share-button--highlight {
+  position: relative;
+  border-radius: 8px;
+  animation: share-pulse 1.6s ease-out infinite;
+}
+
+.share-button--highlight :deep(.ant-btn) {
+  border-color: #1890ff;
+  color: #1890ff;
+  transition:
+    border-color 0.3s,
+    color 0.3s;
 }
 </style>

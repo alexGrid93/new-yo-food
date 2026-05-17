@@ -28,6 +28,16 @@
   },
   "share_food_modal": {
     "title": "Share a meal",
+    "quote": "I am sharing food with you",
+    "quote_author": "Confucius",
+    "pre_title": "Remove unwanted dishes",
+    "pre_hint": "Uncheck the dishes you don't share — they'll be crossed out on the image.",
+    "pre_generate": "Generate image",
+    "share": "Share",
+    "send": "Send",
+    "download": "Download",
+    "copy": "Copy",
+    "copied": "Copied",
     "how_to_save_title": "How to save?",
     "how_to_save_step_1": "Press and hold this image.",
     "how_to_save_step_2": "In the menu that appears, choose: save image or copy image."

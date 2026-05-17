@@ -3,5 +3,6 @@ export const LocalStorageKey = {
   REMIND_ME_CLICK_TIME: 'rmct',
   CURRENT_TOTAL_DAY: 'currentTotalDay',
   TOTAL_DISHES: 'totalDishes',
-  PROMO_INDEX: 'pi'
+  PROMO_INDEX: 'pi',
+  SHARE_BUTTON_CLICKED: 'sbc',
 } as const
