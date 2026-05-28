@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
 import { downloadAndParseMenuSheet } from './downloadAndParseMenuSheet'
 import type { MenuData } from './types'
+import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
 export const useUpdateMenu = async (
   currentSheetId: string | null,
@@ -15,8 +16,10 @@ export const useUpdateMenu = async (
     return
   }
 
+  localStorage.removeItem(LocalStorageKey.TOTAL_DISHES)
+
   menuState.value = menuMap
   startDayState.value = menuStartDay!
-  localStorage.setItem('menuData', JSON.stringify(menuMap))
-  localStorage.setItem('menuStartDate', JSON.stringify(menuStartDay))
+  localStorage.setItem(LocalStorageKey.MENU_DATA, JSON.stringify(menuMap))
+  localStorage.setItem(LocalStorageKey.MENU_START_DATE, JSON.stringify(menuStartDay))
 }

@@ -1,4 +1,5 @@
 import type { I18n } from 'vue-i18n'
+import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
 let _i18n: I18n | null = null
 const _fallbackLocale = 'en'
@@ -10,13 +11,13 @@ export const I18nManager = {
     }
     _i18n = i18nInstance
 
-    const userLocale = localStorage.getItem('user-locale')
+    const userLocale = localStorage.getItem(LocalStorageKey.USER_LOCALE)
 
     if (userLocale) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      _i18n.global.locale.value = localStorage.getItem('user-locale')
-      document.documentElement.lang = <string>localStorage.getItem('user-locale')
+      _i18n.global.locale.value = localStorage.getItem(LocalStorageKey.USER_LOCALE)
+      document.documentElement.lang = <string>localStorage.getItem(LocalStorageKey.USER_LOCALE)
     }
   },
 
@@ -33,7 +34,7 @@ export const I18nManager = {
   },
 
   getCurrentUserLocale(): string | null {
-    return localStorage.getItem('user-locale')
+    return localStorage.getItem(LocalStorageKey.USER_LOCALE)
   },
 
   async setLocale(newLocale: string) {
@@ -50,6 +51,6 @@ export const I18nManager = {
     }
 
     document.documentElement.lang = newLocale
-    localStorage.setItem('user-locale', newLocale)
+    localStorage.setItem(LocalStorageKey.USER_LOCALE, newLocale)
   },
 }

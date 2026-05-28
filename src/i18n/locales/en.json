@@ -50,11 +50,12 @@
   "dish_type": {
     "breakfast": "Breakfast",
     "juice": "Juice",
-    "soup":  "Soup",
+    "soup": "Soup",
     "salad": "Salad",
-    "main_dish":  "Main dish",
+    "main_dish": "Main dish",
     "side_dish": "Side dish",
-    "dessert":  "Dessert"
+    "dessert": "Dessert",
+    "toppings": "Sauces & Toppings"
   },
   "promotions": {
     "segment_title": "Promo",

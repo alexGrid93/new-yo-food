@@ -54,7 +54,8 @@
     "salad": "Salata",
     "main_dish": "Glavno jelo",
     "side_dish": "Prilog",
-    "dessert": "Desert"
+    "dessert": "Desert",
+    "toppings": "Sosevi i dodaci"
   },
   "promotions": {
     "segment_title": "Promocije",

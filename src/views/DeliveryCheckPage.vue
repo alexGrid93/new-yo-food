@@ -110,7 +110,7 @@ const onReset = (): void => {
                 width: '100%',
               }"
             >
-              {{ dish.rsName.split(',').join(' ') }}
+              {{ (dish.rsName || dish.ruName)?.split(',').join(' ') }}
 
               <Badge :count="dish.count" color="blue" />
             </Flex>

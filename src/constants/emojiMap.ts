@@ -37,4 +37,9 @@ export const EmojiMap: Record<DishType, EmojiMapItem> = {
     name: 'Десерты',
     key: DishType.DESSERT,
   },
+  [DishType.TOPPINGS]: {
+    emoji: '🥫',
+    name: 'Соусы и топпинги',
+    key: DishType.TOPPINGS,
+  },
 }

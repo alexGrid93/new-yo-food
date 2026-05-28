@@ -4,6 +4,7 @@ import { days, maxEmployeesCount, startIndex } from './constants'
 import type { DayMenu, MenuData } from './types'
 import { addListItemEmojies } from './addListItemEmojies'
 import { getExportSpreadsheetLink } from './getExportSpreadsheetLink'
+import { TableParseType } from '@/enums/TableParseType.ts'
 
 export const downloadAndParseMenuSheet = async (currentSheetId: string | null) => {
   let menuStartDay: Date | undefined
@@ -35,7 +36,19 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
       return acc
     }
 
-    const maybeStartDate = sheet.data[0][0]
+    let parseType: TableParseType = TableParseType.Default
+
+    const getMaybeStartDate = (): number => {
+      if (typeof sheet.data[1][0] === 'number') {
+        parseType = TableParseType.WishDish
+
+        return sheet.data[1][0]
+      }
+
+      return sheet.data[0][0]
+    }
+    const maybeStartDate = getMaybeStartDate()
+
     const isDate = maybeStartDate > 10000 && maybeStartDate < 73000
 
     if (!menuStartDay && isDate) {
@@ -47,7 +60,7 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
     const dayMenu = sheetData.reduce((acc: DayMenu, current: string[]) => {
       const cleanedCurrent = current.slice(current.findIndex((item) => item !== undefined))
 
-      const itemsWithEmojies = addListItemEmojies(cleanedCurrent)
+      const itemsWithEmojies = addListItemEmojies(cleanedCurrent, parseType)
 
       const filteredRow = itemsWithEmojies.filter((el) => typeof el === 'string')
 
@@ -64,8 +77,6 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
 
     return acc
   }, {})
-
-  localStorage.setItem('menuSheetId', currentSheetId)
 
   return { menuMap, menuStartDay }
 }

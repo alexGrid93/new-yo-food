@@ -4,7 +4,7 @@ import type { DishType } from '@/enums/DishType.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
 export const useDeliveryCheck = () => {
-  const menuDataFromStorage = localStorage.getItem('menuData')
+  const menuDataFromStorage = localStorage.getItem(LocalStorageKey.MENU_DATA)
 
   const getTotalDishes = (day: string): Record<DishType, FoodItem[]> | null => {
     if (!menuDataFromStorage) return null
