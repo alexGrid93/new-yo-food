@@ -5,6 +5,9 @@ import type { DayMenu, MenuData } from './types'
 import { addListItemEmojies } from './addListItemEmojies'
 import { getExportSpreadsheetLink } from './getExportSpreadsheetLink'
 import { TableParseType } from '@/enums/TableParseType.ts'
+import { getMenuCalories } from '@/utils/getMenuCalories.ts'
+import type { Sheet } from '@/types/Sheet.ts'
+import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
 export const downloadAndParseMenuSheet = async (currentSheetId: string | null) => {
   let menuStartDay: Date | undefined
@@ -32,6 +35,12 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
   const workbook = xlsx.parse(arrayBuffer, { type: 'array' })
 
   const menuMap = workbook.reduce((acc: MenuData, sheet) => {
+    if (sheet.name === 'Меню') {
+      const menuCalories = getMenuCalories(sheet as Sheet)
+
+      localStorage.setItem(LocalStorageKey.KBZU_DATA, JSON.stringify(menuCalories))
+    }
+
     if (!days.has(sheet.name.toLowerCase())) {
       return acc
     }
@@ -44,6 +53,8 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
 
         return sheet.data[1][0]
       }
+
+      localStorage.removeItem(LocalStorageKey.KBZU_DATA)
 
       return sheet.data[0][0]
     }
