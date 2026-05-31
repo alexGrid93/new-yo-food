@@ -46,10 +46,11 @@ import PromoView from '@/components/promo/PromoView.vue'
 import { useI18n } from 'vue-i18n'
 import { usePromoMerketing } from '@/features/usePromoMerketing.ts'
 import { useShareAnnouncement } from '@/features/useShareAnnouncement.ts'
+import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
-const menuDataFromStorage = localStorage.getItem('menuData')
-const selectedEmployeeFromStorage = localStorage.getItem('selectedEmployee')
-const menuStartDayFromStorage = localStorage.getItem('menuStartDate')
+const menuDataFromStorage = localStorage.getItem(LocalStorageKey.MENU_DATA)
+const selectedEmployeeFromStorage = localStorage.getItem(LocalStorageKey.SELECTED_EMPLOYEE)
+const menuStartDayFromStorage = localStorage.getItem(LocalStorageKey.MENU_START_DATE)
 
 const menuData = ref(menuDataFromStorage ? (JSON.parse(menuDataFromStorage) as MenuData) : null)
 const menuStartDay = ref(

@@ -4,6 +4,10 @@ import { days, maxEmployeesCount, startIndex } from './constants'
 import type { DayMenu, MenuData } from './types'
 import { addListItemEmojies } from './addListItemEmojies'
 import { getExportSpreadsheetLink } from './getExportSpreadsheetLink'
+import { TableParseType } from '@/enums/TableParseType.ts'
+import { getMenuCalories } from '@/utils/getMenuCalories.ts'
+import type { Sheet } from '@/types/Sheet.ts'
+import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
 export const downloadAndParseMenuSheet = async (currentSheetId: string | null) => {
   let menuStartDay: Date | undefined
@@ -31,11 +35,31 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
   const workbook = xlsx.parse(arrayBuffer, { type: 'array' })
 
   const menuMap = workbook.reduce((acc: MenuData, sheet) => {
+    if (sheet.name === 'Меню') {
+      const menuCalories = getMenuCalories(sheet as Sheet)
+
+      localStorage.setItem(LocalStorageKey.KBZU_DATA, JSON.stringify(menuCalories))
+    }
+
     if (!days.has(sheet.name.toLowerCase())) {
       return acc
     }
 
-    const maybeStartDate = sheet.data[0][0]
+    let parseType: TableParseType = TableParseType.Default
+
+    const getMaybeStartDate = (): number => {
+      if (typeof sheet.data[1][0] === 'number') {
+        parseType = TableParseType.WishDish
+
+        return sheet.data[1][0]
+      }
+
+      localStorage.removeItem(LocalStorageKey.KBZU_DATA)
+
+      return sheet.data[0][0]
+    }
+    const maybeStartDate = getMaybeStartDate()
+
     const isDate = maybeStartDate > 10000 && maybeStartDate < 73000
 
     if (!menuStartDay && isDate) {
@@ -47,7 +71,7 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
     const dayMenu = sheetData.reduce((acc: DayMenu, current: string[]) => {
       const cleanedCurrent = current.slice(current.findIndex((item) => item !== undefined))
 
-      const itemsWithEmojies = addListItemEmojies(cleanedCurrent)
+      const itemsWithEmojies = addListItemEmojies(cleanedCurrent, parseType)
 
       const filteredRow = itemsWithEmojies.filter((el) => typeof el === 'string')
 
@@ -64,8 +88,6 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
 
     return acc
   }, {})
-
-  localStorage.setItem('menuSheetId', currentSheetId)
 
   return { menuMap, menuStartDay }
 }

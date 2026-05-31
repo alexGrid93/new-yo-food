@@ -1,13 +1,23 @@
 <script lang="ts" setup>
 import { List, ListItem } from 'ant-design-vue'
+import { getFullKBZU } from '@/utils/getKBZU.ts'
+import type { DishCalories } from '@/types/MenuCalories.ts'
+import KBZUView from '@/components/KBZUView.vue'
+
 const props = defineProps(['modelValue'])
+
+const kbzu = getFullKBZU()
+
+const getDish = (name: string): DishCalories | null => kbzu?.[name.slice(4).trim()] || null
 </script>
 
 <template>
   <List :locale="{ emptyText: $t('no_data') }" class="list">
-    <ListItem class="listItem" v-for="(dish, index) in props.modelValue" :key="index">{{
-      dish
-    }}</ListItem>
+    <ListItem class="listItem" v-for="(dish, index) in props.modelValue" :key="index">
+      {{ dish }}
+
+      <KBZUView v-if="kbzu && getDish(dish)" :dishKBZU="getDish(dish)" />
+    </ListItem>
   </List>
 </template>
 

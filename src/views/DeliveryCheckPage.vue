@@ -19,7 +19,11 @@ const totalDishes = ref<Record<string, FoodItem[]>>({})
 
 const updateStatus = (type: DishType, name: string) => {
   const getStatus = () => {
-    const currentItem = totalDishes.value[type].find((item) => item.rsName === name)
+    const currentItem = totalDishes.value[type].find((item) => {
+      const langName: 'rsName' | 'ruName' = item.rsName ? 'rsName' : 'ruName'
+
+      return item?.[langName] === name
+    })
 
     switch (currentItem?.status) {
       case 'done':
@@ -97,7 +101,9 @@ const onReset = (): void => {
 
         <List :locale="{ emptyText: $t('no_data') }" class="list">
           <ListItem
-            @click="updateStatus(type[0] as DishType, dish.rsName)"
+            @click="
+              updateStatus(type[0] as DishType, Boolean(dish?.rsName) ? dish.rsName : dish.ruName)
+            "
             class="listItem dish"
             v-for="(dish, index) in totalDishes[type[0]].sort((a, b) => b.count - a.count)"
             :key="index"
@@ -110,7 +116,7 @@ const onReset = (): void => {
                 width: '100%',
               }"
             >
-              {{ dish.rsName.split(',').join(' ') }}
+              {{ (dish.rsName || dish.ruName)?.split(',').join(' ') }}
 
               <Badge :count="dish.count" color="blue" />
             </Flex>

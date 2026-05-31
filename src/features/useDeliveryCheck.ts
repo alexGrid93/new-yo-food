@@ -4,7 +4,7 @@ import type { DishType } from '@/enums/DishType.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
 export const useDeliveryCheck = () => {
-  const menuDataFromStorage = localStorage.getItem('menuData')
+  const menuDataFromStorage = localStorage.getItem(LocalStorageKey.MENU_DATA)
 
   const getTotalDishes = (day: string): Record<DishType, FoodItem[]> | null => {
     if (!menuDataFromStorage) return null
@@ -53,7 +53,9 @@ export const useDeliveryCheck = () => {
     if (!fromStore) return
 
     const newType: FoodItem[] = [...fromStore[type].map(item => {
-      if (item.rsName === name) {
+      const langName: 'rsName' | 'ruName' = item.rsName ? 'rsName' : 'ruName'
+
+      if (item[langName] === name) {
         return {
           ...item,
           status: status
