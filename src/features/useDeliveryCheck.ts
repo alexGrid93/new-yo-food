@@ -53,7 +53,11 @@ export const useDeliveryCheck = () => {
     if (!fromStore) return
 
     const newType: FoodItem[] = [...fromStore[type].map(item => {
-      if (item.rsName === name) {
+      const langName: 'rsName' | 'ruName' = item.rsName ? 'rsName' : 'ruName'
+
+      console.log(status)
+
+      if (item[langName] === name) {
         return {
           ...item,
           status: status

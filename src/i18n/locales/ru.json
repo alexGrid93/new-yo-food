@@ -69,5 +69,12 @@
       "subtitle": "15% на каждый заказ",
       "description": "Натуральные вина сербской винодельни Uziwa — со скидкой 15% на каждый заказ"
     }
+  },
+  "kbzuShort": {
+    "calories": "K",
+    "proteins": "P",
+    "fats": "F",
+    "carbohydrates": "C",
+    "weight": "W"
   }
 }

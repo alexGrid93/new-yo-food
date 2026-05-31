@@ -31,6 +31,21 @@ export const getMenuCalories = (sheet: Sheet): MenuCalories => {
       return acc
     }
 
+    const getWeight = (weightFiled: string): string => {
+      return String(weightFiled)
+        .split('/')
+        .reduce((acc: number[], item: string) => {
+          if (!Number(item)) {
+            return acc
+          }
+
+          acc.push(Number(item))
+
+          return acc
+        }, [])
+        .join('/')
+    };
+
     acc[String(data[0]).trim()] = {
       name: String(data[FieldIndex.Name]).trim(),
       composition: data[FieldIndex.Composition],
@@ -40,7 +55,7 @@ export const getMenuCalories = (sheet: Sheet): MenuCalories => {
         b: data[FieldIndex.B],
         u: data[FieldIndex.U],
       },
-      weight: data[FieldIndex.Weight],
+      weight: Boolean(getWeight(data[FieldIndex.Weight])) ? getWeight(data[FieldIndex.Weight]) : null
     }
 
     return acc

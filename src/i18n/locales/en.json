@@ -69,5 +69,12 @@
       "subtitle": "15% off every order",
       "description": "Natural wines from Serbian winery Uziwa — 15% off every order"
     }
+  },
+  "kbzuShort": {
+    "calories": "K",
+    "proteins": "P",
+    "fats": "F",
+    "carbohydrates": "C",
+    "weight": "W"
   }
 }

@@ -7,7 +7,7 @@ export interface DishCalories {
     z: number
     u: number
   }
-  weight: number
+  weight: string | null
 }
 
 export type MenuCalories = Record<DishCalories['name'], DishCalories>

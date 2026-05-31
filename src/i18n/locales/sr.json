@@ -69,5 +69,12 @@
       "subtitle": "15% popusta na svaku narudžbinu",
       "description": "Prirodna vina srpske vinarije Uziwa — 15% popusta na svaku narudžbinu"
     }
+  },
+  "kbzuShort": {
+    "calories": "K",
+    "proteins": "P",
+    "fats": "F",
+    "carbohydrates": "C",
+    "weight": "W"
   }
 }
