@@ -1,4 +1,5 @@
 import { DishType } from '@/enums/DishType.ts'
+import type { DeliveryStatus } from '@/enums/DeliveryStatus.ts'
 
 export type DayMenu = Record<string, string[]>
 
@@ -8,7 +9,7 @@ export interface FoodItem {
   ruName: string
   rsName: string
   count: number
-  status?: 'done' | 'notAll' | 'noDelivery'
+  status: DeliveryStatus
 }
 
 export interface EmojiMapItem {

@@ -11,6 +11,7 @@ import type { FoodItem } from '@/utils/types.ts'
 import { sortByPriority } from '@/utils/sortByPriority.ts'
 import type { DishType } from '@/enums/DishType.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
+import { DeliveryStatus } from '@/enums/DeliveryStatus.ts'
 
 const currentDate = ref(new Date())
 const { getTotalDishes, setTotalToStore, getTotalFromStore, updateDishStatus } = useDeliveryCheck()
@@ -26,14 +27,14 @@ const updateStatus = (type: DishType, name: string) => {
     })
 
     switch (currentItem?.status) {
-      case 'done':
-        return 'notAll'
-      case 'notAll':
-        return 'noDelivery'
-      case 'noDelivery':
-        return 'done'
+      case DeliveryStatus.DELIVERED:
+        return DeliveryStatus.NO_DELIVERY
+      case DeliveryStatus.NOT_ALL:
+        return DeliveryStatus.DELIVERED
+      case DeliveryStatus.NO_DELIVERY:
+        return DeliveryStatus.NOT_ALL
       default:
-        return 'noDelivery'
+        return DeliveryStatus.NO_DELIVERY
     }
   }
 
@@ -133,7 +134,7 @@ const onReset = (): void => {
     color 0.3s ease,
     text-decoration 0.3s ease;
 }
-.dish--status-done {
+.dish--status-delivered {
   color: #648e6e;
   text-decoration: line-through;
 }

@@ -2,6 +2,7 @@ import type { DayMenu, FoodItem } from '@/utils/types.ts'
 import { EmojiMap } from '@/constants/emojiMap.ts'
 import type { DishType } from '@/enums/DishType.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
+import { DeliveryStatus } from '@/enums/DeliveryStatus.ts'
 
 export const useDeliveryCheck = () => {
   const menuDataFromStorage = localStorage.getItem(LocalStorageKey.MENU_DATA)
@@ -11,34 +12,37 @@ export const useDeliveryCheck = () => {
 
     const menuDataByDay: DayMenu = JSON.parse(menuDataFromStorage)[day]
 
-    return Object.values(menuDataByDay).reduce<Record<DishType, FoodItem[]>>((acc, dayFoods) => {
-      dayFoods.forEach((food) => {
-        const key = Object.values(EmojiMap).find(
-          (item) => item.emoji === food.substring(0, 2).trim(),
-        )?.key || 'other' as DishType
+    return Object.values(menuDataByDay).reduce<Record<DishType, FoodItem[]>>(
+      (acc, dayFoods) => {
+        dayFoods.forEach((food) => {
+          const key =
+            Object.values(EmojiMap).find((item) => item.emoji === food.substring(0, 2).trim())
+              ?.key || ('other' as DishType)
 
-        const rest = food.slice(2).trim()
-        const [ruName, rsName] = rest.split('/').map((s) => s.trim())
+          const rest = food.slice(2).trim()
+          const [ruName, rsName] = rest.split('/').map((s) => s.trim())
 
-        acc[key] ??= []
+          acc[key] ??= []
 
-        const existing = acc[key].find((item) => item.ruName === ruName && item.rsName === rsName)
+          const existing = acc[key].find((item) => item.ruName === ruName && item.rsName === rsName)
 
-        if (existing) {
-          existing.count += 1
-        } else {
-          acc[key].push({ ruName, rsName, count: 1 })
-        }
-      })
+          if (existing) {
+            existing.count += 1
+          } else {
+            acc[key].push({ ruName, rsName, count: 1, status: DeliveryStatus.NO_DELIVERY })
+          }
+        })
 
-      return acc
-    }, {} as Record<DishType, FoodItem[]>)
+        return acc
+      },
+      {} as Record<DishType, FoodItem[]>,
+    )
   }
 
   const setTotalToStore = (total: Record<DishType, FoodItem[]> | null) => {
     if (!total) return
     localStorage.setItem(LocalStorageKey.TOTAL_DISHES, JSON.stringify(total))
-  };
+  }
   const getTotalFromStore = (): Record<DishType, FoodItem[]> | null => {
     const total = localStorage.getItem(LocalStorageKey.TOTAL_DISHES)
 
@@ -47,23 +51,25 @@ export const useDeliveryCheck = () => {
     return JSON.parse(total)
   }
 
-  const updateDishStatus = (type: DishType, name: string, status: string) => {
-    const fromStore = getTotalFromStore();
+  const updateDishStatus = (type: DishType, name: string, status: DeliveryStatus) => {
+    const fromStore = getTotalFromStore()
 
     if (!fromStore) return
 
-    const newType: FoodItem[] = [...fromStore[type].map(item => {
-      const langName: 'rsName' | 'ruName' = item.rsName ? 'rsName' : 'ruName'
+    const newType: FoodItem[] = [
+      ...fromStore[type].map((item) => {
+        const langName: 'rsName' | 'ruName' = item.rsName ? 'rsName' : 'ruName'
 
-      if (item[langName] === name) {
-        return {
-          ...item,
-          status: status
+        if (item[langName] === name) {
+          return {
+            ...item,
+            status: status,
+          }
         }
-      }
 
-      return item
-    })] as FoodItem[]
+        return item
+      }),
+    ] as FoodItem[]
 
     const newTotal = {
       ...fromStore,
@@ -71,8 +77,8 @@ export const useDeliveryCheck = () => {
     }
 
     setTotalToStore(newTotal)
-    return newTotal;
-  };
+    return newTotal
+  }
 
   return {
     getTotalDishes,
