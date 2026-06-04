@@ -4,7 +4,7 @@ defineEmits(['clickLogo', 'clickTitle'])
 
 <template>
   <div className="titleContainer">
-    <img @click="$emit('clickLogo')" className="maskotImg" src="../assets/mascot-frog.png" />
+    <img @click="$emit('clickLogo')" className="maskotImg" src="../assets/mascot.png" />
     <h1 @click="$emit('clickTitle')">YoFood</h1>
   </div>
 </template>
