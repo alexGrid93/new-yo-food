@@ -16,7 +16,7 @@ const getDish = (name: string): DishCalories | null => kbzu?.[name.slice(4).trim
     <ListItem class="listItem" v-for="(dish, index) in props.modelValue" :key="index">
       {{ dish }}
 
-      <KBZUView v-if="kbzu && getDish(dish)" :dishKBZU="getDish(dish)" />
+      <KBZUView v-if="kbzu && Object.keys(getDish(dish)?.kbzu || {}).length" :dishKBZU="getDish(dish)" />
     </ListItem>
   </List>
 </template>
