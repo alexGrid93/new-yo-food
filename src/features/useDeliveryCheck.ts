@@ -3,6 +3,7 @@ import { EmojiMap } from '@/constants/emojiMap.ts'
 import type { DishType } from '@/enums/DishType.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 import { DeliveryStatus } from '@/enums/DeliveryStatus.ts'
+import { removeEmoji } from '@/utils/removeEmoji.ts'
 
 export const useDeliveryCheck = () => {
   const menuDataFromStorage = localStorage.getItem(LocalStorageKey.MENU_DATA)
@@ -19,7 +20,7 @@ export const useDeliveryCheck = () => {
             Object.values(EmojiMap).find((item) => item.emoji === food.substring(0, 2).trim())
               ?.key || ('other' as DishType)
 
-          const rest = food.slice(2).trim()
+          const rest = removeEmoji(food)
           const [ruName, rsName] = rest.split('/').map((s) => s.trim())
 
           acc[key] ??= []

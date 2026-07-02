@@ -1,4 +1,5 @@
 import type { MenuData } from './types'
+import { removeEmoji } from '@/utils/removeEmoji.ts'
 
 export const getDishesFromMenu = (menu: MenuData) => {
   if (!menu) return
@@ -9,7 +10,9 @@ export const getDishesFromMenu = (menu: MenuData) => {
   for (const [day, menu] of days) {
     const dishes = new Set(Object.values(menu).flat())
 
-    result[day] = Array.from(dishes).sort()
+    result[day] = Array.from(dishes)
+      .sort()
+      .map(removeEmoji)
   }
 
   return result
