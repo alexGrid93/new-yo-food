@@ -8,6 +8,7 @@ import { TableParseType } from '@/enums/TableParseType.ts'
 import { getMenuCalories } from '@/utils/getMenuCalories.ts'
 import type { Sheet } from '@/types/Sheet.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
+import { useYoFoodConfig } from '@/features/useYoFoodConfig.ts'
 
 export const downloadAndParseMenuSheet = async (currentSheetId: string | null) => {
   let menuStartDay: Date | undefined
@@ -41,6 +42,14 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
       localStorage.setItem(LocalStorageKey.KBZU_DATA, JSON.stringify(menuCalories))
     }
 
+    if (sheet.name === 'YoFood') {
+      const rawConfig = sheet.data[0][0]
+
+      useYoFoodConfig().setConfig(rawConfig)
+
+      console.log(useYoFoodConfig().getConfig())
+    }
+
     if (!days.has(sheet.name.toLowerCase())) {
       return acc
     }
@@ -68,6 +77,8 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
 
     const sheetData = sheet.data.slice(startIndex, maxEmployeesCount)
 
+    // console.log('sheetData', sheetData)
+
     const dayMenu = sheetData.reduce((acc: DayMenu, current: string[]) => {
       const cleanedCurrent = current.slice(current.findIndex((item) => item !== undefined))
 
@@ -88,6 +99,8 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
 
     return acc
   }, {})
+
+  // console.log('menuMap', menuMap)
 
   return { menuMap, menuStartDay }
 }

@@ -1,0 +1,10 @@
+{
+  "parseConfig": {
+    "breakfast": 2,
+    "juice": 4,
+    "soup": 5,
+    "salad": 6,
+    "main_dish": 7,
+    "dessert": 8
+  }
+}
