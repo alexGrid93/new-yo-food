@@ -8,10 +8,13 @@ import { TableParseType } from '@/enums/TableParseType.ts'
 import { getMenuCalories } from '@/utils/getMenuCalories.ts'
 import type { Sheet } from '@/types/Sheet.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
+import { getYFConfig } from '@/utils/getYFConfig.ts'
 
 export const downloadAndParseMenuSheet = async (currentSheetId: string | null) => {
   let menuStartDay: Date | undefined
   let error: string | undefined
+
+  let parseType: TableParseType = TableParseType.Default
 
   if (!currentSheetId) {
     error = 'Не удалось получить ссылку на таблицу'
@@ -34,6 +37,14 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
   const arrayBuffer = await response.arrayBuffer()
   const workbook = xlsx.parse(arrayBuffer, { type: 'array' })
 
+  const yoFoodSheet = workbook.find((sheet) => sheet.name === 'YoFood')
+
+  if (yoFoodSheet && getYFConfig(yoFoodSheet.data as never).isSeparated) {
+    parseType = TableParseType.WithSeparate
+    localStorage.setItem(LocalStorageKey.PARSE_TYPE, TableParseType.WithSeparate)
+  }
+
+
   const menuMap = workbook.reduce((acc: MenuData, sheet) => {
     if (sheet.name === 'Меню') {
       const menuCalories = getMenuCalories(sheet as Sheet)
@@ -45,10 +56,8 @@ export const downloadAndParseMenuSheet = async (currentSheetId: string | null) =
       return acc
     }
 
-    let parseType: TableParseType = TableParseType.Default
-
     const getMaybeStartDate = (): number => {
-      if (typeof sheet.data[1][0] === 'number') {
+      if (typeof sheet.data[1][0] === 'number' && !localStorage.getItem(LocalStorageKey.PARSE_TYPE)) {
         parseType = TableParseType.WishDish
 
         return sheet.data[1][0]

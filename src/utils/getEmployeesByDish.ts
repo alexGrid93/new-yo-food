@@ -1,5 +1,5 @@
 import type { MenuData } from './types'
-import { removeEmoji } from '@/utils/removeEmoji.ts'
+import { removeEmojiByCondition } from '@/utils/removeEmoji.ts'
 
 export const getEmployeesByDish = (day?: string, dish?: string, menu?: MenuData | null) => {
   if (!day || !dish || !menu) return ''
@@ -7,7 +7,9 @@ export const getEmployeesByDish = (day?: string, dish?: string, menu?: MenuData 
   const dayMenu = menu[day]
 
   const employees = Object.entries(dayMenu).reduce((acc: string[], [employee, employeeMenu]) => {
-    const employeeMenuWithoutEmoji = employeeMenu.map(removeEmoji)
+    const employeeMenuWithoutEmoji = employeeMenu.map((item) =>
+      removeEmojiByCondition(item, (item) => ['РУС', 'СЕРБ'].includes(item)),
+    )
 
     if (employeeMenuWithoutEmoji.includes(dish)) {
       acc.push(employee)

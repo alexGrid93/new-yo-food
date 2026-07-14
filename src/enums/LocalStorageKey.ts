@@ -9,5 +9,6 @@ export const LocalStorageKey = {
   MENU_START_DATE: 'menuStartDate',
   SELECTED_EMPLOYEE: 'selectedEmployee',
   USER_LOCALE: 'user-locale',
-  KBZU_DATA: 'kbzud'
+  KBZU_DATA: 'kbzud',
+  PARSE_TYPE: 'pt'
 } as const

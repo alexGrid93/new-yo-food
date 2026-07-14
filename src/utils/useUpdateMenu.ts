@@ -9,6 +9,8 @@ export const useUpdateMenu = async (
   startDayState: Ref<Date | null>,
   errorState: Ref<string | null>,
 ) => {
+  localStorage.removeItem(LocalStorageKey.PARSE_TYPE)
+
   const { menuMap, menuStartDay, error } = (await downloadAndParseMenuSheet(currentSheetId)) || {}
 
   if (error || !menuMap || !menuStartDay) {

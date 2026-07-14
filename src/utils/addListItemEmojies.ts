@@ -1,4 +1,5 @@
 import { TableParseType } from '@/enums/TableParseType.ts'
+import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
 
 const emojiesMap: Record<string, string> = {
   1: '🍳',
@@ -8,6 +9,15 @@ const emojiesMap: Record<string, string> = {
   8: '🥘',
   10: '🍚',
   11: '🧁',
+}
+
+const emojiesMapWithSeparate: Record<string, string> = {
+  2: '🍳',
+  4: '🥤',
+  5: '🍲',
+  6: '🥗',
+  7: '🥘',
+  8: '🧁',
 }
 
 const emojiesMapTypeWishDish: Record<string, string> = {
@@ -34,9 +44,12 @@ export const addListItemEmojies = (items: string[], parseType: TableParseType = 
     const emojiByType: Record<TableParseType, Record<string, string>> = {
       [TableParseType.Default]: emojiesMap,
       [TableParseType.WishDish]: emojiesMapTypeWishDish,
+      [TableParseType.WithSeparate]: emojiesMapWithSeparate,
     }
 
-    const emoji = emojiByType[parseType][index]
+    const type: TableParseType = localStorage.getItem(LocalStorageKey.PARSE_TYPE) as TableParseType || parseType
+
+    const emoji = emojiByType[type][index]
 
     if (typeof item === 'string' && emoji) {
       return `${emoji}\u00A0\u00A0${item}`

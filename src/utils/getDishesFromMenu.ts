@@ -1,5 +1,5 @@
 import type { MenuData } from './types'
-import { removeEmoji } from '@/utils/removeEmoji.ts'
+import { removeEmojiByCondition } from '@/utils/removeEmoji.ts'
 
 export const getDishesFromMenu = (menu: MenuData) => {
   if (!menu) return
@@ -8,7 +8,7 @@ export const getDishesFromMenu = (menu: MenuData) => {
   const result: Record<string, string[]> = {}
 
   for (const [day, menu] of days) {
-    const dishes = new Set(Object.values(menu).flat().map(removeEmoji))
+    const dishes = new Set(Object.values(menu).flat().map((item) => removeEmojiByCondition(item, (item) => ['РУС', 'СЕРБ'].includes(item))))
 
     result[day] = Array.from(dishes).sort()
   }
