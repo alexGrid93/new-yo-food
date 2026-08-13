@@ -248,12 +248,12 @@ const segmentOptions = computed(() => [
       name: t('by_dish'),
     },
   },
-  {
-    value: SegmentMode.Promo,
-    payload: {
-      name: t('promotions.segment_title'),
-    },
-  },
+  // {
+  //   value: SegmentMode.Promo,
+  //   payload: {
+  //     name: t('promotions.segment_title'),
+  //   },
+  // },
 ])
 
 const segmentMode = ref<SegmentMode>(SegmentMode.Employee)
