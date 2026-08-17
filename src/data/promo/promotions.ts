@@ -4,7 +4,7 @@ import CoverJPG from '../../assets/promo/uziwa/cover.jpg'
 import CoverWEBP from '../../assets/promo/uziwa/cover.webp'
 import { SocialType } from '@/enums/SocialType.ts'
 
-export const REAL_PROMO_INDEX = 2
+export const REAL_PROMO_INDEX = 3
 
 export const promotions: IPromo[] = [
   {
