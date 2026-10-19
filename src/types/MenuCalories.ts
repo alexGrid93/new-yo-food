@@ -1,11 +1,13 @@
+// @TODO need fix k: number | string
+
 export interface DishCalories {
   name: string
   composition: string[]
   kbzu: {
-    k: number
-    b: number
-    z: number
-    u: number
+    k: number | string
+    b: number | string
+    z: number | string
+    u: number | string
   }
   weight: string | null
 }

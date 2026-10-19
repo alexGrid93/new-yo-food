@@ -11,22 +11,22 @@ defineProps<Props>()
 
 <template>
   <Flex gap="10">
-    <Flex>
+    <Flex v-if="dishKBZU?.kbzu.k !== '#N/A'">
       <TypographyText type="secondary">{{ $t('kbzuShort.calories') }}:</TypographyText>&nbsp;{{
         dishKBZU?.kbzu.k
       }}
     </Flex>
-    <Flex>
+    <Flex v-if="dishKBZU?.kbzu.b !== '#N/A'">
       <TypographyText type="secondary">{{ $t('kbzuShort.proteins') }}:</TypographyText>&nbsp;{{
         dishKBZU?.kbzu.b
       }}
     </Flex>
-    <Flex>
+    <Flex v-if="dishKBZU?.kbzu.u !== '#N/A'">
       <TypographyText type="secondary">{{ $t('kbzuShort.carbohydrates') }}:</TypographyText>&nbsp;{{
         dishKBZU?.kbzu.u
       }}
     </Flex>
-    <Flex>
+    <Flex v-if="dishKBZU?.kbzu.z !== '#N/A'">
       <TypographyText type="secondary">{{ $t('kbzuShort.fats') }}:</TypographyText>&nbsp;{{
         dishKBZU?.kbzu.z
       }}
