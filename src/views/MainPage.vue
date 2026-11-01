@@ -26,10 +26,17 @@ import {
   Badge,
 } from 'ant-design-vue'
 import ShareImageTemplate from '@/components/ShareImageTemplate.vue'
-import { ReloadOutlined, ShareAltOutlined, ShoppingCartOutlined } from '@ant-design/icons-vue'
+import {
+  ReloadOutlined,
+  SettingOutlined,
+  ShareAltOutlined,
+  ShoppingCartOutlined,
+} from '@ant-design/icons-vue'
+import { useMyIdentity } from '@/features/useMyIdentity.ts'
 
 import { useUpdateMenu } from '@/utils/useUpdateMenu'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import DishesByEmployee from '@/components/DishesByEmployee.vue'
 import EmployeesByDish from '@/components/EmployeesByDish.vue'
 import SelectDay from '@/components/SelectDay.vue'
@@ -41,12 +48,13 @@ import { useHideControls } from '@/features/useHideControls.ts'
 import { HideControl } from '@/enums/HideControl.ts'
 import ChooseFoodAlert from '@/components/ChooseFoodAlert.vue'
 import { useFoodAlert } from '@/features/useFoodAlert.ts'
-import LangSwitch from '@/components/LangSwitch.vue'
 import PromoView from '@/components/promo/PromoView.vue'
 import { useI18n } from 'vue-i18n'
 import { usePromoMerketing } from '@/features/usePromoMerketing.ts'
 import { useShareAnnouncement } from '@/features/useShareAnnouncement.ts'
 import { LocalStorageKey } from '@/enums/LocalStorageKey.ts'
+
+const router = useRouter()
 
 const menuDataFromStorage = localStorage.getItem(LocalStorageKey.MENU_DATA)
 const selectedEmployeeFromStorage = localStorage.getItem(LocalStorageKey.SELECTED_EMPLOYEE)
@@ -69,6 +77,8 @@ const inputStatus = ref<'warning' | 'error' | ''>('')
 const pastedSheetId = ref<string | null>(null)
 
 const isLoading = ref(false)
+
+const { myEmployeeName, isMyNameMissing } = useMyIdentity()
 
 const employeesToSelect = computed(() => {
   if (!menuData.value) return []
@@ -96,6 +106,24 @@ const isActualMenu = computed(() => {
 
   return timeDiff < 5 * millisecondsDay
 })
+
+const isOwnMenuSelected = computed(
+  () => !!myEmployeeName.value && selectedEmployee.value === myEmployeeName.value,
+)
+
+const canMarkEaten = computed(() => isOwnMenuSelected.value && selectedDay.value === currentDayView)
+
+const isMyNameMissingFromMenu = computed(() => isMyNameMissing(employeesToSelect.value))
+
+watch(
+  employeesToSelect,
+  (employees) => {
+    if (!myEmployeeName.value && employees.length > 0) {
+      router.push({ query: { mode: 'settings' } })
+    }
+  },
+  { immediate: true },
+)
 
 const updateDate = () => {
   currentDate.value = new Date()
@@ -327,7 +355,11 @@ const isPromoModeActive = computed(() => segmentMode.value === SegmentMode.Promo
           </Button>
         </Badge>
 
-        <LangSwitch />
+        <Button size="large" @click="router.push({ query: { mode: 'settings' } })">
+          <template #icon>
+            <SettingOutlined />
+          </template>
+        </Button>
       </Flex>
     </Flex>
 
@@ -377,7 +409,18 @@ const isPromoModeActive = computed(() => segmentMode.value === SegmentMode.Promo
           />
         </Col>
       </Row>
-      <DishesByEmployee v-model="employeeMenuByDay" />
+      <Alert
+        v-if="isMyNameMissingFromMenu"
+        :message="$t('eaten.name_mismatch_warning', { name: myEmployeeName })"
+        type="warning"
+        show-icon
+        :style="{ marginTop: '10px' }"
+      />
+      <DishesByEmployee
+        v-model="employeeMenuByDay"
+        :employee-name="selectedEmployee"
+        :can-mark-eaten="canMarkEaten"
+      />
     </div>
     <div v-else-if="isDishModeActive">
       <Flex vertical gap="10">

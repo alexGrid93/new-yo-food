@@ -8,6 +8,8 @@ export const LocalStorageKey = {
   MENU_DATA: 'menuData',
   MENU_START_DATE: 'menuStartDate',
   SELECTED_EMPLOYEE: 'selectedEmployee',
+  MY_EMPLOYEE_NAME: 'myEmployeeName',
+  EATEN_DISHES: 'eatenDishes',
   USER_LOCALE: 'user-locale',
   KBZU_DATA: 'kbzud',
   PARSE_TYPE: 'pt'
