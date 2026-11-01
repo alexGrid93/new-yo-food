@@ -76,5 +76,14 @@
     "fats": "F",
     "carbohydrates": "C",
     "weight": "W"
+  },
+  "identity_modal": {
+    "title": "Who are you?",
+    "description": "Pick your name from the list to mark the dishes you've eaten.",
+    "placeholder": "Select name",
+    "confirm": "Done"
+  },
+  "eaten": {
+    "name_mismatch_warning": "Your name \"{name}\" wasn't found in this week's menu. Tap the profile icon in the header to pick your name again."
   }
 }

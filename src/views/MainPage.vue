@@ -18,6 +18,7 @@ import {
   Input,
   Modal,
   Segmented,
+  Select,
   Spin,
   Typography,
   TypographyTitle,
@@ -26,7 +27,14 @@ import {
   Badge,
 } from 'ant-design-vue'
 import ShareImageTemplate from '@/components/ShareImageTemplate.vue'
-import { ReloadOutlined, ShareAltOutlined, ShoppingCartOutlined } from '@ant-design/icons-vue'
+import {
+  ReloadOutlined,
+  ShareAltOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from '@ant-design/icons-vue'
+import { getOptionsForSelect } from '@/utils/getOptionsForSelect.ts'
+import { useMyIdentity } from '@/features/useMyIdentity.ts'
 
 import { useUpdateMenu } from '@/utils/useUpdateMenu'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -70,6 +78,10 @@ const pastedSheetId = ref<string | null>(null)
 
 const isLoading = ref(false)
 
+const { myEmployeeName, setMyEmployeeName, isMyNameMissing } = useMyIdentity()
+const isIdentityModalOpen = ref(false)
+const pendingIdentity = ref<string | undefined>(undefined)
+
 const employeesToSelect = computed(() => {
   if (!menuData.value) return []
 
@@ -96,6 +108,42 @@ const isActualMenu = computed(() => {
 
   return timeDiff < 5 * millisecondsDay
 })
+
+const isOwnMenuSelected = computed(
+  () => !!myEmployeeName.value && selectedEmployee.value === myEmployeeName.value,
+)
+
+const canMarkEaten = computed(() => isOwnMenuSelected.value && selectedDay.value === currentDayView)
+
+const isMyNameMissingFromMenu = computed(() => isMyNameMissing(employeesToSelect.value))
+
+const openIdentityModal = () => {
+  pendingIdentity.value = myEmployeeName.value ?? undefined
+  isIdentityModalOpen.value = true
+}
+
+const confirmIdentity = () => {
+  if (!pendingIdentity.value) return
+
+  setMyEmployeeName(pendingIdentity.value)
+
+  if (!selectedEmployee.value) {
+    selectedEmployee.value = pendingIdentity.value
+    localStorage.setItem(LocalStorageKey.SELECTED_EMPLOYEE, pendingIdentity.value)
+  }
+
+  isIdentityModalOpen.value = false
+}
+
+watch(
+  employeesToSelect,
+  (employees) => {
+    if (!myEmployeeName.value && employees.length > 0) {
+      openIdentityModal()
+    }
+  },
+  { immediate: true },
+)
 
 const updateDate = () => {
   currentDate.value = new Date()
@@ -327,6 +375,12 @@ const isPromoModeActive = computed(() => segmentMode.value === SegmentMode.Promo
           </Button>
         </Badge>
 
+        <Button size="large" @click="openIdentityModal">
+          <template #icon>
+            <UserOutlined />
+          </template>
+        </Button>
+
         <LangSwitch />
       </Flex>
     </Flex>
@@ -377,7 +431,18 @@ const isPromoModeActive = computed(() => segmentMode.value === SegmentMode.Promo
           />
         </Col>
       </Row>
-      <DishesByEmployee v-model="employeeMenuByDay" />
+      <Alert
+        v-if="isMyNameMissingFromMenu"
+        :message="$t('eaten.name_mismatch_warning', { name: myEmployeeName })"
+        type="warning"
+        show-icon
+        :style="{ marginTop: '10px' }"
+      />
+      <DishesByEmployee
+        v-model="employeeMenuByDay"
+        :employee-name="selectedEmployee"
+        :can-mark-eaten="canMarkEaten"
+      />
     </div>
     <div v-else-if="isDishModeActive">
       <Flex vertical gap="10">
@@ -415,6 +480,33 @@ const isPromoModeActive = computed(() => segmentMode.value === SegmentMode.Promo
     <Divider />
     <Alert :message="$t('update_menu_modal.info_message')" />
     <Divider />
+  </Modal>
+
+  <Modal
+    v-model:open="isIdentityModalOpen"
+    :closable="!!myEmployeeName"
+    :maskClosable="!!myEmployeeName"
+    :getContainer="false"
+  >
+    <template #title>{{ $t('identity_modal.title') }}</template>
+    <Flex vertical gap="10">
+      <Text type="secondary">{{ $t('identity_modal.description') }}</Text>
+      <Select
+        size="large"
+        show-search
+        v-model:value="pendingIdentity"
+        :placeholder="$t('identity_modal.placeholder')"
+        :options="getOptionsForSelect(employeesToSelect)"
+      />
+    </Flex>
+    <template #footer>
+      <Button v-if="myEmployeeName" @click="isIdentityModalOpen = false">
+        {{ $t('system.cancel') }}
+      </Button>
+      <Button type="primary" :disabled="!pendingIdentity" @click="confirmIdentity">
+        {{ $t('identity_modal.confirm') }}
+      </Button>
+    </template>
   </Modal>
 
   <Modal

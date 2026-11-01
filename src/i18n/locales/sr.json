@@ -76,5 +76,14 @@
     "fats": "F",
     "carbohydrates": "C",
     "weight": "W"
+  },
+  "identity_modal": {
+    "title": "Ko si ti?",
+    "description": "Izaberi svoje ime sa liste da bi obeležavao jela koja si pojeo.",
+    "placeholder": "Izaberite ime",
+    "confirm": "Spremno"
+  },
+  "eaten": {
+    "name_mismatch_warning": "Tvoje ime „{name}” nije pronađeno u meniju ove nedelje. Dodirni ikonicu profila u zaglavlju da ponovo izabereš ime."
   }
 }
