@@ -77,13 +77,12 @@
     "carbohydrates": "C",
     "weight": "W"
   },
-  "identity_modal": {
+  "identity_section": {
     "title": "Who are you?",
     "description": "Pick your name from the list to mark the dishes you've eaten.",
-    "placeholder": "Select name",
-    "confirm": "Done"
+    "placeholder": "Select name"
   },
   "eaten": {
-    "name_mismatch_warning": "Your name \"{name}\" wasn't found in this week's menu. Tap the profile icon in the header to pick your name again."
+    "name_mismatch_warning": "Your name \"{name}\" wasn't found in this week's menu. Open settings (the gear icon in the header) to pick your name again."
   }
 }
