@@ -36,7 +36,7 @@ const handleToggle = (index: number): void => {
 
 <template>
   <List :locale="{ emptyText: $t('no_data') }" class="list">
-    <ListItem class="listItem" v-for="(dish, index) in props.modelValue" :key="index">
+    <ListItem class="listItem" :class="{canMarkEaten : canMarkEaten}" v-for="(dish, index) in props.modelValue" :key="index">
       <Checkbox
         v-if="canMarkEaten"
         :checked="eatenState[index]"
@@ -62,6 +62,12 @@ const handleToggle = (index: number): void => {
   margin-bottom: 15px;
   font-size: 16px;
   display: grid;
+  grid-template: 'text text text'
+             'kbzu kbzu kbzu';
+  grid-template-columns: 22px 1fr 1fr;
+}
+
+.listItem.canMarkEaten {
   grid-template: 'checkbox text text'
              'kbzu kbzu kbzu';
   grid-template-columns: 22px 1fr 1fr;
