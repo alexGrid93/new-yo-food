@@ -43,9 +43,11 @@ const handleToggle = (index: number): void => {
         @change="handleToggle(index)"
         class="eatenCheckbox"
       />
-      <span :class="{ eatenText: canMarkEaten && eatenState[index] }">{{ dish }}</span>
+      <span :class="{ eatenText: canMarkEaten && eatenState[index] }" class="dishName">
+        {{ dish }}
+      </span>
 
-      <KBZUView v-if="kbzu && Object.keys(getDish(dish)?.kbzu || {}).length" :dishKBZU="getDish(dish)" />
+      <KBZUView v-if="kbzu && Object.keys(getDish(dish)?.kbzu || {}).length" :dishKBZU="getDish(dish)" class="kbzuView" />
     </ListItem>
   </List>
 </template>
@@ -59,14 +61,27 @@ const handleToggle = (index: number): void => {
   padding: 0px;
   margin-bottom: 15px;
   font-size: 16px;
+  display: grid;
+  grid-template: 'checkbox text text'
+             'kbzu kbzu kbzu';
+  grid-template-columns: 22px 1fr 1fr;
 }
 
 .eatenCheckbox {
   margin-right: 10px;
+  grid-area: checkbox;
+}
+
+.dishName {
+  grid-area: text;
 }
 
 .eatenText {
   text-decoration: line-through;
   opacity: 0.6;
+}
+
+.kbzuView {
+  grid-area: kbzu;
 }
 </style>
