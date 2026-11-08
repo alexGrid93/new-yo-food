@@ -22,6 +22,7 @@ dayMap.set('ср', 'wed')
 dayMap.set('чт', 'thu')
 dayMap.set('пт', 'fri')
 dayMap.set('сб', 'sat')
+dayMap.set('вс', 'sun')
 </script>
 
 <template>

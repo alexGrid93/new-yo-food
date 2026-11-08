@@ -12,12 +12,15 @@ export const getCurrentDateView = (date: Date, config?: { withWeekday: boolean }
 
   const currentLocate = I18nManager.getCurrentLocale()
 
-  const formattedDate = date.toLocaleDateString(currentLocate === 'sr' ? 'sr-Latn' : currentLocate, options)
+  const formattedDate = date.toLocaleDateString(
+    currentLocate === 'sr' ? 'sr-Latn' : currentLocate,
+    options,
+  )
 
   return `${formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)}`
 }
 
-export const arrayDays = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб']
+export const arrayDays = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
 
 interface IDaysMap {
   Mon: string

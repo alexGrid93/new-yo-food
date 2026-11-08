@@ -18,7 +18,8 @@
     "wed": "Wed",
     "thu": "Thu",
     "fri": "Fri",
-    "sat": "Sat"
+    "sat": "Sat",
+    "sun": "Sun"
   },
   "update_menu_modal": {
     "title": "Update menu",

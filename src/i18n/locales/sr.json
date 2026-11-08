@@ -18,7 +18,8 @@
     "wed": "Sre",
     "thu": "Čet",
     "fri": "Pet",
-    "sat": "Sub"
+    "sat": "Sub",
+    "sun": "Ned"
   },
   "update_menu_modal": {
     "title": "Ažuriraj meni",
